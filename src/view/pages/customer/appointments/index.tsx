@@ -1,4 +1,5 @@
 import { ArrowLeft } from "lucide-react";
+import { BackHeader } from "@/view/components/back-header";
 import { Button } from "@/view/components/ui/button";
 import { NextAppointmentCard } from "../components/next-appointment-card";
 
@@ -10,12 +11,7 @@ const appointment = {
 export function CustomerAppointmentsPage() {
 	return (
 		<main className="space-y-6">
-			<div className="flex items-center gap-2">
-				<Button variant={"ghost"}>
-					<ArrowLeft />
-				</Button>
-				<h1 className="text-2xl font-bold">Meus Agendamentos</h1>
-			</div>
+			<BackHeader to="/customer" text="Meus Agendamentos" />
 
 			<div className="space-y-3">
 				<h3 className="text-lg font-bold text-muted-foreground">Confirmados</h3>
@@ -25,6 +21,8 @@ export function CustomerAppointmentsPage() {
 			<div className="space-y-3 ">
 				<h3 className="text-lg font-bold text-muted-foreground">Finalizados</h3>
 				<div className="space-y-3 ">
+					<NextAppointmentCard appointment={appointment} />
+					<NextAppointmentCard appointment={appointment} />
 					<NextAppointmentCard appointment={appointment} />
 					<NextAppointmentCard appointment={appointment} />
 					<NextAppointmentCard appointment={appointment} />

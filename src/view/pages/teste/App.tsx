@@ -1,128 +1,166 @@
-import { useState } from "react";
-import heroImg from "../../../assets/hero.png";
-import reactLogo from "../../../assets/react.svg";
-import viteLogo from "../../../assets/vite.svg";
-import "./App.css";
+import type { User } from "@supabase/supabase-js";
+import { useEffect, useState } from "react";
+import { supabaseClient } from "@/app/config/supabase-client";
 
 function App() {
-	const [count, setCount] = useState(0);
+	const [user, setUser] = useState<User | null>(null);
+	const [debugData, setDebugData] = useState<any>(null);
+
+	useEffect(() => {
+		supabaseClient.auth.getUser().then(({ data }) => {
+			setUser(data.user);
+		});
+
+		const {
+			data: { subscription },
+		} = supabaseClient.auth.onAuthStateChange((_event, session) => {
+			setUser(session?.user ?? null);
+		});
+
+		return () => {
+			subscription.unsubscribe();
+		};
+	}, []);
+
+	const handleLogin = async () => {
+		await supabaseClient.auth.signInWithOAuth({
+			provider: "google",
+			options: {
+				redirectTo: window.location.origin,
+			},
+		});
+	};
+
+	const handleLogout = async () => {
+		await supabaseClient.auth.signOut();
+
+		setDebugData(null);
+	};
+
+	const handleDebug = async () => {
+		const sessionResponse = await supabaseClient.auth.getSession();
+
+		const userResponse = await supabaseClient.auth.getUser();
+
+		setDebugData({
+			session: sessionResponse,
+			user: userResponse,
+		});
+	};
+
+	if (!user) {
+		return (
+			<div
+				style={{
+					height: "100vh",
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "center",
+					flexDirection: "column",
+					gap: "1rem",
+					fontFamily: "sans-serif",
+				}}
+			>
+				<h1>Khalid Barbearia</h1>
+
+				<button
+					onClick={handleLogin}
+					style={{
+						padding: "12px 20px",
+						cursor: "pointer",
+					}}
+				>
+					Entrar com Google
+				</button>
+			</div>
+		);
+	}
 
 	return (
-		<>
-			<section id="center">
-				<div className="hero">
-					<img src={heroImg} className="base" width="170" height="179" alt="" />
-					<img src={reactLogo} className="framework" alt="React logo" />
-					<img src={viteLogo} className="vite" alt="Vite logo" />
-				</div>
-				<div>
-					<h1>Get started</h1>
-					<p>
-						Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-					</p>
-				</div>
+		<div
+			style={{
+				padding: "2rem",
+				display: "flex",
+				flexDirection: "column",
+				gap: "1rem",
+				fontFamily: "sans-serif",
+			}}
+		>
+			<h1>Usuário logado</h1>
+
+			<img
+				src={user.user_metadata.avatar_url}
+				alt=""
+				width={80}
+				height={80}
+				style={{
+					borderRadius: "50%",
+				}}
+			/>
+
+			<p>
+				<strong>Nome:</strong> {user.user_metadata.full_name}
+			</p>
+
+			<p>
+				<strong>Email:</strong> {user.email}
+			</p>
+
+			<p>
+				<strong>ID:</strong> {user.id}
+			</p>
+
+			<p>
+				<strong>Provider:</strong> {user.app_metadata.provider}
+			</p>
+
+			<div
+				style={{
+					display: "flex",
+					gap: "1rem",
+				}}
+			>
 				<button
-					className="counter"
-					onClick={() => setCount((count) => count + 1)}
+					onClick={handleLogout}
+					style={{
+						padding: "12px 20px",
+						cursor: "pointer",
+					}}
 				>
-					Count is {count}
+					Logout
 				</button>
-			</section>
 
-			<div className="ticks"></div>
+				<button
+					onClick={handleDebug}
+					style={{
+						padding: "12px 20px",
+						cursor: "pointer",
+					}}
+				>
+					Debug Supabase
+				</button>
+			</div>
 
-			<section id="next-steps">
-				<div id="docs">
-					<svg className="icon" role="presentation" aria-hidden="true">
-						<use href="/icons.svg#documentation-icon"></use>
-					</svg>
-					<h2>Documentation</h2>
-					<p>Your questions, answered</p>
-					<ul>
-						<li>
-							<a href="https://vite.dev/" target="_blank" rel="noopener">
-								<img className="logo" src={viteLogo} alt="" />
-								Explore Vite
-							</a>
-						</li>
-						<li>
-							<a href="https://react.dev/" target="_blank" rel="noopener">
-								<img className="button-icon" src={reactLogo} alt="" />
-								Learn more
-							</a>
-						</li>
-					</ul>
+			{debugData && (
+				<div>
+					<h2>Debug Data</h2>
+
+					<pre
+						style={{
+							background: "#111",
+							color: "#0f0",
+							padding: "1rem",
+							borderRadius: "8px",
+							overflow: "auto",
+							fontSize: "12px",
+							maxHeight: "600px",
+						}}
+					>
+						{JSON.stringify(debugData, null, 2)}
+					</pre>
 				</div>
-				<div id="social">
-					<svg className="icon" role="presentation" aria-hidden="true">
-						<use href="/icons.svg#social-icon"></use>
-					</svg>
-					<h2>Connect with us</h2>
-					<p>Join the Vite community</p>
-					<ul>
-						<li>
-							<a
-								href="https://github.com/vitejs/vite"
-								target="_blank"
-								rel="noopener"
-							>
-								<svg
-									className="button-icon"
-									role="presentation"
-									aria-hidden="true"
-								>
-									<use href="/icons.svg#github-icon"></use>
-								</svg>
-								GitHub
-							</a>
-						</li>
-						<li>
-							<a href="https://chat.vite.dev/" target="_blank" rel="noopener">
-								<svg
-									className="button-icon"
-									role="presentation"
-									aria-hidden="true"
-								>
-									<use href="/icons.svg#discord-icon"></use>
-								</svg>
-								Discord
-							</a>
-						</li>
-						<li>
-							<a href="https://x.com/vite_js" target="_blank" rel="noopener">
-								<svg
-									className="button-icon"
-									role="presentation"
-									aria-hidden="true"
-								>
-									<use href="/icons.svg#x-icon"></use>
-								</svg>
-								X.com
-							</a>
-						</li>
-						<li>
-							<a
-								href="https://bsky.app/profile/vite.dev"
-								target="_blank"
-								rel="noopener"
-							>
-								<svg
-									className="button-icon"
-									role="presentation"
-									aria-hidden="true"
-								>
-									<use href="/icons.svg#bluesky-icon"></use>
-								</svg>
-								Bluesky
-							</a>
-						</li>
-					</ul>
-				</div>
-			</section>
-
-			<div className="ticks"></div>
-			<section id="spacer"></section>
-		</>
+			)}
+		</div>
 	);
 }
 

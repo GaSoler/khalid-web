@@ -1,5 +1,7 @@
 import { Route, Routes } from "react-router-dom";
+import { AdminPage } from "@/view/pages/admin";
 import { CustomerAppointmentsPage } from "@/view/pages/customer/appointments";
+import { CustomerNewAppointmentPage } from "@/view/pages/customer/appointments/new";
 import { RootLayout } from "../view/layouts/root-layout";
 import { CustomerPage } from "../view/pages/customer";
 import { LoginPage } from "../view/pages/login";
@@ -17,6 +19,11 @@ export function AppRoutes() {
 					path="/customer/appointments"
 					element={<CustomerAppointmentsPage />}
 				/>
+				<Route
+					path="/customer/appointments/new"
+					element={<CustomerNewAppointmentPage />}
+				/>
+				<Route path="/admin" element={<AdminPage />} />
 			</Route>
 		</Routes>
 	);
