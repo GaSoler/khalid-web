@@ -16,14 +16,21 @@ export function RootLayout() {
 							"--header-height": "calc(var(--spacing) * 12)",
 						} as React.CSSProperties
 					}
+					className="h-dvh overflow-hidden"
 				>
 					<AppSidebar />
-					<SidebarInset>
+					<SidebarInset className="flex flex-col overflow-hidden">
+						<Header />
+						<div className="flex flex-1 flex-col overflow-hidden gap-4 p-4">
+							<Outlet />
+						</div>
+					</SidebarInset>
+					{/* <SidebarInset>
 						<Header />
 						<div className="flex flex-1 flex-col gap-4 p-4">
 							<Outlet />
 						</div>
-					</SidebarInset>
+					</SidebarInset> */}
 				</SidebarProvider>
 			</TooltipProvider>
 			<Toaster />
