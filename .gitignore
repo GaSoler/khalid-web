@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Env — nunca commita valores reais
+.env
+.env.local
+.env.*.local
