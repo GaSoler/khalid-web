@@ -142,8 +142,17 @@ export function CustomerNewAppointmentPage() {
 				onSubmit={handleSubmit}
 				className="flex flex-col flex-1 overflow-hidden px-4"
 			>
-				<div className="flex-1 overflow-y-auto py-4">
+				{/* <div className="flex-1 overflow-y-auto py-4">
 					<StepComponent />
+				</div> */}
+
+				{/* Conteúdo do step — centralizado verticalmente */}
+				<div className="flex-1 overflow-y-auto">
+					<div className="flex min-h-full items-center justify-center py-4">
+						<div className="w-full max-w-4xl px-4">
+							<StepComponent />
+						</div>
+					</div>
 				</div>
 
 				{/* Botões fixos no rodapé */}

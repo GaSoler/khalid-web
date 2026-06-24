@@ -239,3 +239,51 @@ export const timeSlots = [
 	{ time: "17:00", available: true },
 	{ time: "17:30", available: true },
 ];
+
+export const services2 = [
+	{
+		id: "1",
+		name: "Corte de cabelo & Barba",
+		description: "Corte completo com acabamento de barba",
+		priceInCents: 5500,
+		durationInMinutes: 50,
+		active: true,
+	},
+	{
+		id: "2",
+		name: "Sobrancelha",
+		description: "Alinhamento e limpeza da sobrancelha",
+		priceInCents: 1000,
+		durationInMinutes: 10,
+		active: false,
+	},
+];
+
+export const users = [
+	{
+		id: "2d7b5ab2-4de2-4cc3-adf7-51c23e037dfe",
+		email: "gabriel.edsoler@gmail.com",
+		fullName: "Gabriel Soler",
+		avatarUrl:
+			"https://lh3.googleusercontent.com/a/ACg8ocKSy0nuWREonU-CZwo5aQVqL8c8-LLawqKJ3j-yQalY2L0dvg=s96-c",
+		roles: ["customer"],
+	},
+	{
+		id: "9225379b-05f7-4e67-a78c-06b9b006c1de",
+		email: "gah.soler@gmail.com",
+		fullName: "Gabriel Soler",
+		avatarUrl:
+			"https://lh3.googleusercontent.com/a/ACg8ocKWmsFmjXHFfYyLDt3RpwSNH6OfiqkDzgZ2uNNNC53bLK0P2A=s96-c",
+		roles: ["barber", "admin"],
+	},
+	{
+		id: "0845b344-bd8d-44d0-88ae-a08d5c646fb1",
+		email: "gabisoler1234@gmail.com",
+		fullName: "Gabriel Soler",
+		avatarUrl:
+			"https://lh3.googleusercontent.com/a/ACg8ocLbwnzFdjCS6xX9sHLeDVue5i1_LUw2VVCBeqPwZQd9HDzeP77N5w=s96-c",
+		roles: ["barber"],
+	},
+];
+
+export type Role = "customer" | "barber" | "admin";

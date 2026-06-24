@@ -1,4 +1,4 @@
-import { IconBrandGoogle } from "@tabler/icons-react";
+import { useAuth } from "@/app/contexts/auth-provider";
 import { Button } from "@/view/components/ui/button";
 import { Card, CardContent } from "@/view/components/ui/card";
 import {
@@ -9,6 +9,8 @@ import {
 import barberImg from "./barbershop-team.svg";
 
 export function LoginForm() {
+	const { signInWithGoogle } = useAuth();
+
 	return (
 		<div className="flex flex-col gap-6">
 			<Card className="overflow-hidden p-0">
@@ -22,7 +24,7 @@ export function LoginForm() {
 								</p>
 							</div>
 							<Field>
-								<Button variant={"brand"} size={"lg"}>
+								<Button variant="brand" size="lg" onClick={signInWithGoogle}>
 									<svg
 										aria-hidden="true"
 										xmlns="http://www.w3.org/2000/svg"
