@@ -1,5 +1,6 @@
 import { Calendar, Scissors } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/app/contexts/auth-provider";
 import { Button } from "@/view/components/ui/button";
 import { Card, CardContent } from "@/view/components/ui/card";
 import { EmptyAppointmentCard } from "./components/empty-appointment-card";
@@ -13,10 +14,13 @@ import { NextAppointmentCard } from "./components/next-appointment-card";
 const appointment = null;
 
 export function CustomerPage() {
+	const { user } = useAuth();
 	return (
 		<main className="space-y-6">
 			<div>
-				<h1 className="text-2xl font-bold">Bem vindo de volta, Gabriel!</h1>
+				<h1 className="text-2xl font-bold">
+					Bem vindo de volta, {user?.fullName}!
+				</h1>
 				<span className="text-muted-foreground">
 					Agende seu próximo horário ou veja seus agendamentos
 				</span>

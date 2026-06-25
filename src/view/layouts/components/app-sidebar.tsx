@@ -1,6 +1,8 @@
 import { Scissors } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/app/contexts/auth-provider";
 import { dataSidebar } from "@/app/utils/mocked-data";
+import { getNavItemsByRole } from "@/app/utils/nav-items";
 import {
 	Sidebar,
 	SidebarContent,
@@ -10,11 +12,13 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 } from "@/view/components/ui/sidebar";
-import { NavDocuments } from "./nav-documents";
 import { NavMain } from "./nav-main";
 import { NavSecondary } from "./nav-secondary";
 import { NavUser } from "./nav-user";
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+	const { user } = useAuth();
+	const items = user ? getNavItemsByRole(user.roles) : [];
+
 	return (
 		<Sidebar variant="inset" collapsible="offcanvas" {...props}>
 			<SidebarHeader>
@@ -35,13 +39,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				</SidebarMenu>
 			</SidebarHeader>
 			<SidebarContent>
-				<NavMain items={dataSidebar.navMain} />
-				<NavDocuments items={dataSidebar.documents} />
+				<NavMain items={items} />
 				<NavSecondary items={dataSidebar.navSecondary} className="mt-auto" />
 			</SidebarContent>
-			<SidebarFooter>
-				<NavUser user={dataSidebar.user} />
-			</SidebarFooter>
+			<SidebarFooter>{user && <NavUser user={user} />}</SidebarFooter>
 		</Sidebar>
 	);
 }

@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { useAuth } from "@/app/contexts/auth-provider";
 import type { Role } from "@/app/entities/User";
 import { ProtectedRoute } from "@/app/services/protected-route";
+import { Loader } from "@/view/components/loader";
 import { AdminPage } from "@/view/pages/admin";
 import { AdminServicesPage } from "@/view/pages/admin/services";
 import { AdminUsersPage } from "@/view/pages/admin/users";
@@ -15,7 +16,7 @@ import App from "../view/pages/teste/App";
 export function AppRoutes() {
 	const { user, isLoading } = useAuth();
 
-	if (isLoading) return null;
+	if (isLoading) return <Loader />;
 
 	const homeRedirect = !user
 		? "/login"
