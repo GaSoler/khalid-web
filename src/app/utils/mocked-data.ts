@@ -174,3 +174,16 @@ export const users = [
 ];
 
 export type Role = "customer" | "barber" | "admin";
+
+export const appUser = {
+	data: {
+		user: {
+			id: "2d7b5ab2-4de2-4cc3-adf7-51c23e037dfe",
+			email: "gabriel.edsoler@gmail.com",
+			fullName: "Gabriel Soler",
+			avatarUrl:
+				"https://lh3.googleusercontent.com/a/ACg8ocKSy0nuWREonU-CZwo5aQVqL8c8-LLawqKJ3j-yQalY2L0dvg=s96-c",
+			roles: ["admin"] as Role[],
+		},
+	},
+};

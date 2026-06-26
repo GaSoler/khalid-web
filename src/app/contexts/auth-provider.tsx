@@ -2,6 +2,7 @@ import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabaseClient } from "@/app/config/supabase-client";
 import type { User } from "../entities/User";
+import { appUser } from "../utils/mocked-data";
 
 interface AuthContextValue {
 	user: User | null;
@@ -18,19 +19,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const [token, setToken] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 
-	const loadUser = async (supabaseUser: SupabaseUser, accessToken: string) => {
+	const loadUser = async (_supabaseUser: SupabaseUser, accessToken: string) => {
 		try {
-			const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
-				headers: { Authorization: `Bearer ${accessToken}` },
-			});
-			if (!response.ok) throw new Error("Falha ao buscar usuário");
+			// const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
+			// 	headers: { Authorization: `Bearer ${accessToken}` },
+			// });
+			// if (!response.ok) throw new Error("Falha ao buscar usuário");
 
-			const data = await response.json();
+			// const data = await response.json();
+			const data = appUser.data;
 			setUser({
 				id: data.user.id,
 				email: data.user.email,
-				fullName: data.user.full_name,
-				avatarUrl: data.user.avatar_url,
+				fullName: data.user.fullName,
+				avatarUrl: data.user.avatarUrl,
 				roles: data.user.roles,
 			});
 			setToken(accessToken);
