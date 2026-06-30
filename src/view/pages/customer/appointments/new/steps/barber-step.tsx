@@ -1,5 +1,5 @@
 import { CheckCircle2 } from "lucide-react";
-import { useState } from "react";
+import type { User } from "@/app/entities/User";
 import { cn } from "@/app/utils/cn";
 import {
 	Avatar,
@@ -9,16 +9,16 @@ import {
 import { Card, CardContent } from "@/view/components/ui/card";
 
 interface BarberStepProps {
-	barbers: {
-		id: string;
-		name: string;
-		avatarUrl: string;
-	}[];
+	barbers: User[];
+	selectedBarberId: string;
+	onSelect: (barberId: string) => void;
 }
 
-export function BarberStep({ barbers }: BarberStepProps) {
-	const [selectedBarberId, setSelectedBarberId] = useState<string | null>(null);
-
+export function BarberStep({
+	barbers,
+	selectedBarberId,
+	onSelect,
+}: BarberStepProps) {
 	return (
 		<div className="grid gap-4 grid-cols-1 md:grid-cols-2">
 			{barbers.map((barber) => {
@@ -27,7 +27,7 @@ export function BarberStep({ barbers }: BarberStepProps) {
 				return (
 					<Card
 						key={barber.id}
-						onClick={() => setSelectedBarberId(barber.id)}
+						onClick={() => onSelect(barber.id)}
 						className={cn(
 							"p-4 relative cursor-pointer ring-0 border-2 transition-all hover:border-brand",
 							isSelected && "border-brand",
@@ -37,9 +37,9 @@ export function BarberStep({ barbers }: BarberStepProps) {
 							<div className="flex items-center gap-2">
 								<Avatar>
 									<AvatarImage src={barber.avatarUrl} />
-									<AvatarFallback>{barber.name[0]}</AvatarFallback>
+									<AvatarFallback>{barber.fullName[0]}</AvatarFallback>
 								</Avatar>
-								<span className="font-bold">{barber.name}</span>
+								<span className="font-bold">{barber.fullName}</span>
 							</div>
 							<CheckCircle2
 								className={cn(

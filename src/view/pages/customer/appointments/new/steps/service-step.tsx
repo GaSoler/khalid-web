@@ -1,24 +1,22 @@
 import { CheckCircle2, Clock } from "lucide-react";
-import { useState } from "react";
+import type { Service } from "@/app/entities/Service";
 import { cn } from "@/app/utils/cn";
+import { formatDuration } from "@/app/utils/format-duration";
+import { formatPrice } from "@/app/utils/format-price";
 import { Card, CardContent } from "@/view/components/ui/card";
 import { ScrollArea } from "@/view/components/ui/scroll-area";
 
 interface ServiceStepProps {
-	services: {
-		id: string;
-		name: string;
-		description: string;
-		price: number;
-		duration: string;
-	}[];
+	services: Service[];
+	selectedServiceId: string;
+	onSelect: (serviceId: string) => void;
 }
 
-export function ServiceStep({ services }: ServiceStepProps) {
-	const [selectedServiceId, setSelectedServiceId] = useState<string | null>(
-		null,
-	);
-
+export function ServiceStep({
+	services,
+	selectedServiceId,
+	onSelect,
+}: ServiceStepProps) {
 	return (
 		<ScrollArea>
 			<div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
@@ -28,7 +26,7 @@ export function ServiceStep({ services }: ServiceStepProps) {
 					return (
 						<Card
 							key={service.id}
-							onClick={() => setSelectedServiceId(service.id)}
+							onClick={() => onSelect(service.id)}
 							className={cn(
 								"p-4 relative cursor-pointer ring-0 border-2 transition-all hover:border-brand",
 								isSelected && "border-brand",
@@ -41,11 +39,11 @@ export function ServiceStep({ services }: ServiceStepProps) {
 										{service.description}
 									</span>
 									<span className="text-sm font-semibold">
-										R$ {service.price},00
+										{formatPrice(service.priceCents)}
 									</span>
 									<div className="flex items-center gap-2 text-xs text-muted-foreground">
 										<Clock className="h-3 w-3" />
-										{service.duration}
+										{formatDuration(service.durationMin)}
 									</div>
 								</div>
 

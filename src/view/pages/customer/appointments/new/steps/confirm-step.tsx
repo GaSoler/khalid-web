@@ -1,5 +1,7 @@
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import type { Service } from "@/app/entities/Service";
+import type { User } from "@/app/entities/User";
 import imgUrl from "@/assets/barbershop-map.png";
 import {
 	Avatar,
@@ -7,13 +9,20 @@ import {
 	AvatarImage,
 } from "@/view/components/ui/avatar";
 import { Card, CardContent } from "@/view/components/ui/card";
+import type { AppointmentForm } from "../use-appointment-wizard";
 
-export function ConfirmStep() {
+interface ConfirmStepProps {
+	form: AppointmentForm;
+	service: Service | undefined;
+	barber: User | undefined;
+}
+
+export function ConfirmStep({ form, service, barber }: ConfirmStepProps) {
 	return (
 		<div>
 			<Card>
 				<CardContent>
-					<div className="flex sm:flex-col items-center gap-4">
+					<div className="flex flex-col items-center gap-4">
 						<div className="relative h-45 w-full">
 							<img
 								src={imgUrl}
@@ -42,34 +51,34 @@ export function ConfirmStep() {
 						</div>
 						<div className="flex flex-col gap-2 p-3 w-full">
 							<div className="flex justify-between">
-								<h2 className="font-bold">Corte de cabelo & Barba</h2>
+								<h2 className="font-bold">{service?.name ?? "—"}</h2>
 								<h3 className="font-bold text-sm">
-									{Intl.NumberFormat("pt-BR", {
-										style: "currency",
-										currency: "BRL",
-									}).format(Number(60))}
+									{service
+										? Intl.NumberFormat("pt-BR", {
+												style: "currency",
+												currency: "BRL",
+											}).format(service.priceCents / 100)
+										: "—"}
 								</h3>
 							</div>
 
 							<div className="flex justify-between capitalize">
 								<h3 className="text-gray-400 text-sm">Dia</h3>
 								<h4 className="text-sm font-extralight">
-									{format(new Date("2024-04-21T09:00:00"), "dd 'de' MMMM", {
-										locale: ptBR,
-									})}
+									{form.date
+										? format(form.date, "dd 'de' MMMM", { locale: ptBR })
+										: "—"}
 								</h4>
 							</div>
 
 							<div className="flex justify-between">
 								<h3 className="text-gray-400 text-sm">Horário</h3>
-								<h4 className="text-sm font-extralight">
-									{format(new Date("2024-04-21T09:00:00"), "HH:mm")}
-								</h4>
+								<h4 className="text-sm font-extralight">{form.time || "—"}</h4>
 							</div>
 
 							<div className="flex justify-between">
 								<h3 className="text-gray-400 text-sm">Barbeiro</h3>
-								<h4 className="text-sm font-extralight">Nicolas Papenika</h4>
+								<h4 className="text-sm">{barber?.fullName ?? "—"}</h4>
 							</div>
 						</div>
 					</div>

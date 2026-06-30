@@ -15,6 +15,9 @@ export function LoginForm() {
 		<div className="flex flex-col gap-6">
 			<Card className="overflow-hidden p-0">
 				<CardContent className="grid p-0 md:grid-cols-2">
+					<div>
+						<img src={barberImg} alt="" className="" />
+					</div>
 					<form className="flex p-6 md:p-8">
 						<FieldGroup className="items-center justify-center">
 							<div className="flex flex-col items-center gap-2 text-center">
@@ -45,9 +48,6 @@ export function LoginForm() {
 							</Field>
 						</FieldGroup>
 					</form>
-					<div>
-						<img src={barberImg} alt="" className="" />
-					</div>
 				</CardContent>
 			</Card>
 			<FieldDescription className="px-6 text-center">
