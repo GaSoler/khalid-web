@@ -3,6 +3,7 @@ import { ptBR } from "date-fns/locale";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import type { Appointment } from "@/app/entities/Appointment";
 import imgUrl from "@/assets/barbershop-map.png";
 import {
 	AlertDialog,
@@ -33,15 +34,19 @@ import {
 	SheetTrigger,
 } from "@/view/components/ui/sheet";
 
-interface NextAppointmentCardProps {
-	appointment: {
-		id: string;
-		date: Date;
-	};
+interface AppointmentCardProps {
+	appointment: Appointment;
 }
 
-export function NextAppointmentCard({ appointment }: NextAppointmentCardProps) {
-	const isBookingConfirmed = isFuture(appointment.date);
+export function AppointmentCard({ appointment }: AppointmentCardProps) {
+	const statusConfig = {
+		scheduled: { label: "Agendado", variant: "default" as const },
+		cancelled: { label: "Cancelado", variant: "secondary" as const },
+		completed: { label: "Finalizado", variant: "outline" as const },
+	};
+	const status = statusConfig[appointment.status];
+
+	const isBookingConfirmed = isFuture(appointment.startsAt);
 	const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
 	const cancelBooking = async (appointmentId: string) => {
@@ -52,7 +57,6 @@ export function NextAppointmentCard({ appointment }: NextAppointmentCardProps) {
 
 	const handleCancelClick = async () => {
 		setIsDeleteLoading(true);
-
 		try {
 			await cancelBooking(appointment.id);
 
@@ -70,10 +74,12 @@ export function NextAppointmentCard({ appointment }: NextAppointmentCardProps) {
 				<Card className="py-0 min-w-full">
 					<CardContent className="flex px-0 py-0">
 						<div className="flex flex-3 flex-col gap-2 py-4 pl-4">
-							<Badge className="w-fit">Confirmado</Badge>
-							<h2 className="font-bold">Corte de cabelo & Barba</h2>
+							<Badge className="w-fit" variant={status.variant}>
+								{status.label}
+							</Badge>
+							<h2 className="font-bold">{appointment.serviceId}</h2>
 							<p className="text-sm text-muted-foreground">
-								com Nicolas Papenika
+								com {appointment.barberId}
 							</p>
 							<div className="flex items-center gap-2">
 								<Avatar className="w-6 h-6">
@@ -86,10 +92,10 @@ export function NextAppointmentCard({ appointment }: NextAppointmentCardProps) {
 						</div>
 						<div className="flex flex-1 flex-col items-center justify-center border-l p-6">
 							<p className="text-sm capitalize">
-								{format(appointment.date, "MMMM", { locale: ptBR })}
+								{format(appointment.startsAt, "MMMM", { locale: ptBR })}
 							</p>
-							<p className="text-2xl">{format(appointment.date, "dd")}</p>
-							<p className="text-sm">{format(appointment.date, "HH:mm")}</p>
+							<p className="text-2xl">{format(appointment.startsAt, "dd")}</p>
+							<p className="text-sm">{format(appointment.startsAt, "HH:mm")}</p>
 						</div>
 					</CardContent>
 				</Card>
@@ -144,14 +150,16 @@ export function NextAppointmentCard({ appointment }: NextAppointmentCardProps) {
 							<div className="flex justify-between capitalize">
 								<h3 className="text-gray-400 text-sm">Dia</h3>
 								<h4 className="text-sm font-extralight">
-									{format(appointment.date, "dd 'de' MMMM", { locale: ptBR })}
+									{format(appointment.startsAt, "dd 'de' MMMM", {
+										locale: ptBR,
+									})}
 								</h4>
 							</div>
 
 							<div className="flex justify-between">
 								<h3 className="text-gray-400 text-sm">Horário</h3>
 								<h4 className="text-sm font-extralight">
-									{format(appointment.date, "HH:mm")}
+									{format(appointment.startsAt, "HH:mm")}
 								</h4>
 							</div>
 

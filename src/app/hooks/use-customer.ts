@@ -65,7 +65,12 @@ export function useCreateAppointment() {
 			customerServices.createAppointment(body),
 
 		onSuccess: (appointment) => {
-			queryClient.invalidateQueries({ queryKey: ["customer", "appointments"] });
+			queryClient.invalidateQueries({
+				queryKey: ["customer", "appointments", "customer-next-appointment"],
+			});
+			queryClient.invalidateQueries({
+				queryKey: ["customer-next-appointment"],
+			});
 
 			const date = format(new Date(appointment.startsAt), "dd 'de' MMMM", {
 				locale: ptBR,
@@ -105,5 +110,21 @@ export function useListAppointments() {
 		appointments: listAppointments.data ?? [],
 		isLoadingAppointments: listAppointments.isLoading,
 		errorAppointments: listAppointments.error,
+	};
+}
+
+export function useGetNextAppointment() {
+	const { user } = useAuth();
+
+	const getNextAppointment = useQuery({
+		queryKey: ["customer-next-appointment"],
+		queryFn: customerServices.getNextAppointment,
+		enabled: !!user,
+	});
+
+	return {
+		appointment: getNextAppointment.data ?? null,
+		isLoadingAppointment: getNextAppointment.isLoading,
+		errorAppointment: getNextAppointment.error,
 	};
 }

@@ -1,4 +1,5 @@
 import type { TimeSlot } from "@/app/entities/User";
+import { Loader } from "@/view/components/loader";
 import { Button } from "@/view/components/ui/button";
 import { Calendar } from "@/view/components/ui/calendar";
 import { ScrollArea } from "@/view/components/ui/scroll-area";
@@ -26,7 +27,7 @@ export function DateStep({
 		<div className="rounded-xl border border-border bg-card overflow-hidden md:h-full">
 			<div className="flex flex-col md:flex-row md:h-full">
 				<div className="flex-1 p-4 border-border md:border-r md:flex">
-					<Calendar
+					{/* <Calendar
 						mode="single"
 						selected={date}
 						onSelect={onDateChange}
@@ -38,17 +39,32 @@ export function DateStep({
 							formatWeekdayName: (d) =>
 								d.toLocaleString("pt-BR", { weekday: "short" }),
 						}}
+					/> */}
+					<Calendar
+						mode="single"
+						selected={date}
+						onSelect={onDateChange}
+						defaultMonth={date}
+						disabled={[{ before: today }]}
+						showOutsideDays={false}
+						className="bg-transparent p-0 [--cell-size:--spacing(8)] xs:[--cell-size:--spacing(10)] w-full"
+						formatters={{
+							formatWeekdayName: (d) =>
+								d.toLocaleString("pt-BR", { weekday: "narrow" }),
+						}}
 					/>
 				</div>
-				<div className="flex flex-col p-4 border-t border-border">
+				{/* <div className="flex flex-col p-4 border-t border-border"> */}
+				{/* <div className="flex flex-col p-4 border-t border-border shrink-0"> */}
+				<div className="p-4 border-t md:border-t-0 md:border-l border-border md:w-48 md:flex md:flex-col md:min-h-0">
 					<p className="mb-3 shrink-0 text-sm font-medium text-muted-foreground">
 						Horários disponíveis
 					</p>
-
 					{isLoading ? (
-						<div className="text-sm text-muted-foreground">
-							Carregando horários...
-						</div>
+						// <div className="text-sm text-muted-foreground">
+						// 	Carregando horários...
+						// </div>
+						<Loader />
 					) : (
 						<>
 							{/* Mobile — scroll horizontal */}

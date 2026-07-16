@@ -45,6 +45,11 @@ export const customerServices = {
 	// 		)
 	// 		.then((res) => res.data),
 
+	getNextAppointment: () =>
+		httpClient
+			.get<ApiResponse<Appointment | null>>("/customer/appointments/next")
+			.then((res) => res.data.data),
+
 	createAppointment: (body: CreateAppointmentDTO) =>
 		httpClient
 			.post<ApiResponse<Appointment>>("/customer/appointments", body)

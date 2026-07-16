@@ -1,20 +1,18 @@
 import { Calendar, Scissors } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/app/contexts/auth-provider";
+import { useGetNextAppointment } from "@/app/hooks/use-customer";
+import { Loader } from "@/view/components/loader";
 import { Button } from "@/view/components/ui/button";
 import { Card, CardContent } from "@/view/components/ui/card";
+import { AppointmentCard } from "./components/appointment-card";
 import { EmptyAppointmentCard } from "./components/empty-appointment-card";
-import { NextAppointmentCard } from "./components/next-appointment-card";
-
-// const appointment = {
-// 	id: "123",
-// 	date: new Date("2024-04-21T09:00:00"),
-// };
-
-const appointment = null;
 
 export function CustomerPage() {
 	const { user } = useAuth();
+	const { appointment, isLoadingAppointment } = useGetNextAppointment();
+	// const { appointment = null } = useGetNextAppointment();
+	// const isLoadingAppointment = true;
 	return (
 		<main className="space-y-6">
 			<div>
@@ -61,8 +59,10 @@ export function CustomerPage() {
 						<Link to="/customer/appointments">Ver todos</Link>
 					</Button>
 				</div>
-				{appointment ? (
-					<NextAppointmentCard appointment={appointment} />
+				{isLoadingAppointment ? (
+					<Loader />
+				) : appointment ? (
+					<AppointmentCard appointment={appointment} />
 				) : (
 					<EmptyAppointmentCard />
 				)}
