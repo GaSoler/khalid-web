@@ -1,0 +1,9 @@
+http://192.168.0.189:5173
+
+
+mudar no supabase
+http://localhost:5173
+
+
+mudar no env
+VITE_API_URL=http://localhost:3000/api/v1
