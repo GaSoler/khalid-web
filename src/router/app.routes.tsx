@@ -6,6 +6,8 @@ import { Loader } from "@/view/components/loader";
 import { AdminPage } from "@/view/pages/admin";
 import { AdminServicesPage } from "@/view/pages/admin/services";
 import { AdminUsersPage } from "@/view/pages/admin/users";
+import { BarberPage } from "@/view/pages/barber";
+import { BarberAppointmentsPage } from "@/view/pages/barber/appointments";
 import { CustomerAppointmentsPage } from "@/view/pages/customer/appointments";
 import { CustomerNewAppointmentPage } from "@/view/pages/customer/appointments/new";
 import { RootLayout } from "../view/layouts/root-layout";
@@ -58,6 +60,24 @@ export function AppRoutes() {
 					element={
 						<ProtectedRoute roles={["customer"]}>
 							<CustomerNewAppointmentPage />
+						</ProtectedRoute>
+					}
+				/>
+
+				{/* Barber */}
+				<Route
+					path="/barber"
+					element={
+						<ProtectedRoute roles={["barber"]}>
+							<BarberPage />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path="/barber/appointments"
+					element={
+						<ProtectedRoute roles={["barber"]}>
+							<BarberAppointmentsPage />
 						</ProtectedRoute>
 					}
 				/>

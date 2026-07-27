@@ -36,6 +36,18 @@ export const navItems: NavItem[] = [
 	},
 	{
 		title: "Início",
+		url: "/barber",
+		icon: House,
+		roles: ["barber"],
+	},
+	{
+		title: "Agenda",
+		url: "/barber/appointments",
+		icon: Calendar,
+		roles: ["barber"],
+	},
+	{
+		title: "Início",
 		url: "/admin",
 		icon: House,
 		roles: ["admin"],
