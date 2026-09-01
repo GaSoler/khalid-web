@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuth } from "@/app/contexts/auth-provider";
 import { customerServices } from "@/app/services/customer/index";
@@ -53,47 +52,8 @@ export function useGetBarberAvailableTimes(barberId: string, date?: Date) {
 		queryFn: () =>
 			customerServices.getBarberAvailableTimes(barberId, formattedDate!),
 		enabled: Boolean(barberId && formattedDate),
-	});
-}
-
-export function useCreateAppointment() {
-	const queryClient = useQueryClient();
-	const navigate = useNavigate();
-
-	return useMutation({
-		mutationFn: (body: CreateAppointmentDTO) =>
-			customerServices.createAppointment(body),
-
-		onSuccess: (appointment) => {
-			queryClient.invalidateQueries({
-				queryKey: ["customer", "appointments", "customer-next-appointment"],
-			});
-			queryClient.invalidateQueries({
-				queryKey: ["customer-next-appointment"],
-			});
-
-			const date = format(new Date(appointment.startsAt), "dd 'de' MMMM", {
-				locale: ptBR,
-			});
-			const time = format(new Date(appointment.startsAt), "HH:mm");
-
-			toast.success("Agendamento confirmado!", {
-				description: `Seu horário foi marcado para ${date} às ${time}.`,
-				duration: 5000,
-			});
-
-			navigate("/customer");
-		},
-		// biome-ignore lint/suspicious/noExplicitAny: <lalala>
-		onError: (error: any) => {
-			const message =
-				error?.response?.data?.message ?? "Tente novamente em instantes.";
-
-			toast.error("Não foi possível realizar o agendamento.", {
-				description: message,
-				duration: 6000,
-			});
-		},
+		staleTime: 0,
+		gcTime: 0,
 	});
 }
 
@@ -113,6 +73,20 @@ export function useListAppointments() {
 	};
 }
 
+export function useGetAppointment(appointmentId: string) {
+	const getAppointment = useQuery({
+		queryKey: ["customer-appointments", appointmentId],
+		queryFn: () => customerServices.getAppointment(appointmentId),
+		enabled: Boolean(appointmentId),
+	});
+
+	return {
+		appointment: getAppointment.data ?? null,
+		isLoadingAppointment: getAppointment.isLoading,
+		errorAppointment: getAppointment.error,
+	};
+}
+
 export function useGetNextAppointment() {
 	const { user } = useAuth();
 
@@ -123,8 +97,83 @@ export function useGetNextAppointment() {
 	});
 
 	return {
-		appointment: getNextAppointment.data ?? null,
-		isLoadingAppointment: getNextAppointment.isLoading,
-		errorAppointment: getNextAppointment.error,
+		nextAppointment: getNextAppointment.data ?? null,
+		isLoadingNextAppointment: getNextAppointment.isLoading,
+		errorNextAppointment: getNextAppointment.error,
 	};
+}
+
+export function useCreateAppointment(onSuccess?: () => void) {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: (body: CreateAppointmentDTO) =>
+			customerServices.createAppointment(body),
+
+		onSuccess: (appointment) => {
+			queryClient.invalidateQueries({
+				queryKey: ["customer-appointments"],
+			});
+			queryClient.invalidateQueries({
+				queryKey: ["customer-next-appointment"],
+			});
+
+			const date = format(new Date(appointment.startsAt), "dd 'de' MMMM", {
+				locale: ptBR,
+			});
+			const time = format(new Date(appointment.startsAt), "HH:mm");
+
+			toast.success("Agendamento confirmado!", {
+				description: `Seu horário foi marcado para ${date} às ${time}.`,
+				duration: 5000,
+			});
+
+			onSuccess?.();
+		},
+		// biome-ignore lint/suspicious/noExplicitAny: <lalala>
+		onError: (error: any) => {
+			const message =
+				error?.response?.data?.message ?? "Tente novamente em instantes.";
+
+			toast.error("Não foi possível realizar o agendamento.", {
+				description: message,
+				duration: 6000,
+			});
+		},
+	});
+}
+
+export function useCancelAppointment(onSuccess?: () => void) {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: (appointmentId: string) =>
+			customerServices.cancelAppointment(appointmentId),
+
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: ["customer-appointments"],
+			});
+			queryClient.invalidateQueries({
+				queryKey: ["customer-next-appointment"],
+			});
+
+			toast.success("Reserva cancelada com sucesso!", {
+				description: "Seu horário foi cancelado.",
+				duration: 5000,
+			});
+
+			onSuccess?.();
+		},
+		// biome-ignore lint/suspicious/noExplicitAny: <lalala>
+		onError: (error: any) => {
+			const message =
+				error?.response?.data?.message ?? "Tente novamente em instantes.";
+
+			toast.error("Não foi possível cancelar a reserva.", {
+				description: message,
+				duration: 6000,
+			});
+		},
+	});
 }

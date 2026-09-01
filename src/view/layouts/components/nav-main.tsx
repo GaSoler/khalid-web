@@ -1,6 +1,5 @@
-import type { LucideIcon } from "lucide-react";
 import { Link } from "react-router-dom";
-import type { Role } from "@/app/entities/User";
+import type { NavItem } from "@/app/utils/nav-items";
 import {
 	SidebarGroup,
 	SidebarGroupContent,
@@ -8,18 +7,25 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
+	useSidebar,
 } from "@/view/components/ui/sidebar";
 
 export function NavMain({
 	items,
+	onNewAppointment,
 }: {
-	items: {
-		title: string;
-		url: string;
-		icon?: LucideIcon;
-		roles: Role[];
-	}[];
+	items: NavItem[];
+	onNewAppointment: () => void;
 }) {
+	const { setOpenMobile } = useSidebar();
+
+	const handleClick = (item: NavItem) => {
+		setOpenMobile(false);
+		if (item.action === "new-appointment") {
+			setTimeout(() => onNewAppointment(), 300);
+		}
+	};
+
 	return (
 		<SidebarGroup className="group-data-[collapsible=icon]:hidden">
 			<SidebarGroupLabel>Ações rápidas</SidebarGroupLabel>
@@ -27,12 +33,22 @@ export function NavMain({
 				<SidebarMenu>
 					{items.map((item) => (
 						<SidebarMenuItem key={item.title}>
-							<Link to={item.url}>
-								<SidebarMenuButton tooltip={item.title}>
+							{item.action ? (
+								<SidebarMenuButton
+									tooltip={item.title}
+									onClick={() => handleClick(item)}
+								>
 									{item.icon && <item.icon />}
 									<span>{item.title}</span>
 								</SidebarMenuButton>
-							</Link>
+							) : (
+								<Link to={item.url} onClick={() => handleClick(item)}>
+									<SidebarMenuButton tooltip={item.title}>
+										{item.icon && <item.icon />}
+										<span>{item.title}</span>
+									</SidebarMenuButton>
+								</Link>
+							)}
 						</SidebarMenuItem>
 					))}
 				</SidebarMenu>

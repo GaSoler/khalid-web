@@ -1,18 +1,20 @@
 import { Calendar, Scissors } from "lucide-react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/app/contexts/auth-provider";
 import { useGetNextAppointment } from "@/app/hooks/use-customer";
 import { Loader } from "@/view/components/loader";
 import { Button } from "@/view/components/ui/button";
 import { Card, CardContent } from "@/view/components/ui/card";
+import { CustomerNewAppointmentSheet } from "./appointments/new";
 import { AppointmentCard } from "./components/appointment-card";
 import { EmptyAppointmentCard } from "./components/empty-appointment-card";
 
 export function CustomerPage() {
 	const { user } = useAuth();
-	const { appointment, isLoadingAppointment } = useGetNextAppointment();
-	// const { appointment = null } = useGetNextAppointment();
-	// const isLoadingAppointment = true;
+	const [sheetOpen, setSheetOpen] = useState(false);
+	const { nextAppointment, isLoadingNextAppointment } = useGetNextAppointment();
+
 	return (
 		<main className="space-y-6">
 			<div>
@@ -27,17 +29,22 @@ export function CustomerPage() {
 			<section className="space-y-4">
 				<h2 className="text-lg font-semibold">Ações rápidas</h2>
 				<div className="flex items-stretch justify-center gap-2">
-					<Link to={"/customer/appointments/new"} className="flex-1">
-						<Card className="w-full h-full flex items-center justify-center hover:ring-brand transition-colors">
-							<CardContent className="flex flex-col items-center text-center p-4 space-y-2">
-								<div className="p-3 rounded-full bg-secondary">
-									<Scissors className="text-brand" />
-								</div>
+					<Card
+						className="flex-1 w-full h-full flex items-center justify-center hover:ring-brand transition-colors"
+						onClick={() => setSheetOpen(true)}
+					>
+						<CardContent className="flex flex-col items-center text-center p-4 space-y-2">
+							<div className="p-3 rounded-full bg-secondary">
+								<Scissors className="text-brand" />
+							</div>
 
-								<span>Agendar horário</span>
-							</CardContent>
-						</Card>
-					</Link>
+							<span>Agendar horário</span>
+						</CardContent>
+					</Card>
+					<CustomerNewAppointmentSheet
+						open={sheetOpen}
+						onOpenChange={setSheetOpen}
+					/>
 					<Link to={"/customer/appointments"} className="flex-1">
 						<Card className="w-full h-full flex items-center justify-center hover:ring-brand transition-colors">
 							<CardContent className="flex flex-col items-center text-center p-4 space-y-2">
@@ -45,7 +52,7 @@ export function CustomerPage() {
 									<Calendar className="text-brand" />
 								</div>
 
-								<span>Meus agendamentos</span>
+								<span>Agendamentos</span>
 							</CardContent>
 						</Card>
 					</Link>
@@ -59,10 +66,14 @@ export function CustomerPage() {
 						<Link to="/customer/appointments">Ver todos</Link>
 					</Button>
 				</div>
-				{isLoadingAppointment ? (
-					<Loader />
-				) : appointment ? (
-					<AppointmentCard appointment={appointment} />
+				{isLoadingNextAppointment ? (
+					<Card>
+						<CardContent>
+							<Loader />
+						</CardContent>
+					</Card>
+				) : nextAppointment ? (
+					<AppointmentCard appointment={nextAppointment} />
 				) : (
 					<EmptyAppointmentCard />
 				)}

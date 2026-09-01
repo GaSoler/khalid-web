@@ -35,15 +35,13 @@ export const customerServices = {
 			.get<ApiResponse<Appointment[]>>("/customer/appointments")
 			.then((res) => {
 				console.log("res.data", res.data);
-				return res.data;
+				return res.data.data;
 			}),
 
-	// getAppointment: (appointmentId: string) =>
-	// 	httpClient
-	// 		.get<{ appointments: Appointment }>(
-	// 			`/customer/appointments/${appointmentId}`,
-	// 		)
-	// 		.then((res) => res.data),
+	getAppointment: (appointmentId: string) =>
+		httpClient
+			.get<{ data: Appointment }>(`/customer/appointments/${appointmentId}`)
+			.then((res) => res.data.data),
 
 	getNextAppointment: () =>
 		httpClient
@@ -55,10 +53,10 @@ export const customerServices = {
 			.post<ApiResponse<Appointment>>("/customer/appointments", body)
 			.then((res) => res.data.data),
 
-	// cancelAppointment: (appointmentId: string) =>
-	// 	httpClient
-	// 		.delete<{ appointments: Appointment }>(
-	// 			`/customer/appointments/${appointmentId}`,
-	// 		)
-	// 		.then((res) => res.data),
+	cancelAppointment: (appointmentId: string) =>
+		httpClient
+			.post<{ appointments: Appointment }>(
+				`/customer/appointments/${appointmentId}`,
+			)
+			.then((res) => res.data),
 };

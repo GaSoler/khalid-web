@@ -1,6 +1,5 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useAuth } from "@/app/contexts/auth-provider";
-import type { Role } from "@/app/entities/User";
 import { ProtectedRoute } from "@/app/services/protected-route";
 import { Loader } from "@/view/components/loader";
 import { AdminPage } from "@/view/pages/admin";
@@ -8,12 +7,11 @@ import { AdminServicesPage } from "@/view/pages/admin/services";
 import { AdminUsersPage } from "@/view/pages/admin/users";
 import { BarberPage } from "@/view/pages/barber";
 import { BarberAppointmentsPage } from "@/view/pages/barber/appointments";
+import { BarberAvailabilityPage } from "@/view/pages/barber/availability";
 import { CustomerAppointmentsPage } from "@/view/pages/customer/appointments";
-import { CustomerNewAppointmentPage } from "@/view/pages/customer/appointments/new";
 import { RootLayout } from "../view/layouts/root-layout";
 import { CustomerPage } from "../view/pages/customer";
 import { LoginPage } from "../view/pages/login";
-import App from "../view/pages/teste/App";
 
 export function AppRoutes() {
 	const { user, isLoading } = useAuth();
@@ -55,14 +53,6 @@ export function AppRoutes() {
 						</ProtectedRoute>
 					}
 				/>
-				<Route
-					path="/customer/appointments/new"
-					element={
-						<ProtectedRoute roles={["customer"]}>
-							<CustomerNewAppointmentPage />
-						</ProtectedRoute>
-					}
-				/>
 
 				{/* Barber */}
 				<Route
@@ -70,6 +60,14 @@ export function AppRoutes() {
 					element={
 						<ProtectedRoute roles={["barber"]}>
 							<BarberPage />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path="/barber/availability"
+					element={
+						<ProtectedRoute roles={["barber"]}>
+							<BarberAvailabilityPage />
 						</ProtectedRoute>
 					}
 				/>

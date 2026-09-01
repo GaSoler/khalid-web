@@ -6,7 +6,11 @@ export function EmptyAppointmentCard() {
 		<Card className="py-0 min-w-full opacity-70 border border-dashed border-brand ring-0">
 			<CardContent className="flex items-center justify-center px-0 py-0">
 				<div className="flex flex-col items-center gap-2 py-4 justify-center">
-					<img src={barberImg} alt="Barber" />
+					<img
+						src={barberImg}
+						className="object-contain w-40 h-40"
+						alt="Barber"
+					/>
 					<h2 className="font-bold text-muted-foreground text-lg">
 						Nenhum horário marcado
 					</h2>

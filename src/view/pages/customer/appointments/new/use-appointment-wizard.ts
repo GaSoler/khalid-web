@@ -16,7 +16,7 @@ export type AppointmentForm = {
 
 const TOTAL_STEPS = 4;
 
-export function useAppointmentWizard() {
+export function useAppointmentWizard(onSuccess?: () => void) {
 	const [currentStep, setCurrentStep] = useState(0);
 	const [form, setForm] = useState<AppointmentForm>({
 		serviceId: "",
@@ -29,7 +29,7 @@ export function useAppointmentWizard() {
 	const { services, isLoadingServices } = useListActiveServices();
 	const { barbers, isLoadingBarbers } = useListActiveBarbers();
 	const availableTimes = useGetBarberAvailableTimes(form.barberId, form.date);
-	const createAppointment = useCreateAppointment();
+	const createAppointment = useCreateAppointment(onSuccess);
 
 	// — Derivados —
 	const selectedService = services.find((s) => s.id === form.serviceId);

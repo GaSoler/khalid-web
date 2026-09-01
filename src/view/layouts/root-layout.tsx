@@ -1,11 +1,15 @@
+import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { Header } from "../components/header";
 import { SidebarInset, SidebarProvider } from "../components/ui/sidebar";
 import { Toaster } from "../components/ui/sonner";
 import { TooltipProvider } from "../components/ui/tooltip";
+import { CustomerNewAppointmentSheet } from "../pages/customer/appointments/new";
 import { AppSidebar } from "./components/app-sidebar";
 
 export function RootLayout() {
+	const [sheetOpen, setSheetOpen] = useState(false);
+
 	return (
 		<>
 			<TooltipProvider>
@@ -16,23 +20,22 @@ export function RootLayout() {
 							"--header-height": "calc(var(--spacing) * 12)",
 						} as React.CSSProperties
 					}
-					className="h-dvh overflow-hidden"
+					className="h-dvh"
 				>
-					<AppSidebar />
-					<SidebarInset className="flex flex-col overflow-hidden">
+					<AppSidebar onNewAppointment={() => setSheetOpen(true)} />
+					<SidebarInset className="flex flex-col overflow-y-auto">
 						<Header />
-						<div className="flex flex-1 flex-col overflow-hidden gap-4 p-4">
+						<div className="p-4">
 							<Outlet />
 						</div>
 					</SidebarInset>
-					{/* <SidebarInset>
-						<Header />
-						<div className="flex flex-1 flex-col gap-4 p-4">
-							<Outlet />
-						</div>
-					</SidebarInset> */}
 				</SidebarProvider>
 			</TooltipProvider>
+
+			<CustomerNewAppointmentSheet
+				open={sheetOpen}
+				onOpenChange={setSheetOpen}
+			/>
 			<Toaster />
 		</>
 	);

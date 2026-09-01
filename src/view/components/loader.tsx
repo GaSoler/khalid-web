@@ -17,7 +17,7 @@ interface LoaderProps {
 export function Loader({ fullScreen = false }: LoaderProps) {
 	return (
 		<div
-			className={`flex items-center justify-center bg-background ${fullScreen ? "h-dvh w-full" : "flex-1 w-full py-12"}`}
+			className={`flex items-center justify-center bg-transparent ${fullScreen ? "h-dvh w-full" : "flex-1 w-full py-12"}`}
 		>
 			<Scissors className="size-8 animate-spin text-muted-foreground" />
 		</div>

@@ -15,7 +15,12 @@ import {
 import { NavMain } from "./nav-main";
 import { NavSecondary } from "./nav-secondary";
 import { NavUser } from "./nav-user";
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+	onNewAppointment: () => void;
+}
+
+export function AppSidebar({ onNewAppointment, ...props }: AppSidebarProps) {
 	const { user } = useAuth();
 	const items = user ? getNavItemsByRole(user.roles) : [];
 
@@ -39,7 +44,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				</SidebarMenu>
 			</SidebarHeader>
 			<SidebarContent>
-				<NavMain items={items} />
+				<NavMain items={items} onNewAppointment={onNewAppointment} />
 				<NavSecondary items={dataSidebar.navSecondary} className="mt-auto" />
 			</SidebarContent>
 			<SidebarFooter>{user && <NavUser user={user} />}</SidebarFooter>

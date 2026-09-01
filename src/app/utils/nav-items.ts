@@ -8,11 +8,12 @@ import {
 } from "lucide-react";
 import type { Role } from "../entities/User";
 
-interface NavItem {
+export interface NavItem {
 	title: string;
 	url: string;
 	icon: LucideIcon;
 	roles: Role[];
+	action?: string;
 }
 
 export const navItems: NavItem[] = [
@@ -27,6 +28,7 @@ export const navItems: NavItem[] = [
 		url: "/customer/appointments/new",
 		icon: Scissors,
 		roles: ["customer"],
+		action: "new-appointment",
 	},
 	{
 		title: "Meus agendamentos",
